@@ -1,0 +1,11 @@
+var context = new RhythmsGonnaGetYouContext();
+
+var songCount = context.Songs.Count();
+Console.WriteLine($"There are {songCount} songs!");
+
+foreach (var song in context.Songs)
+{
+    Console.WriteLine($"There is a song named {song.Title}.");
+}
+
+
