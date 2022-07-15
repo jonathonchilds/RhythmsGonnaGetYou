@@ -47,9 +47,18 @@ namespace RhythmsGonnaGetYou
 
         }
 
+        // public static string ToStringUtc(this DateTime time)
+        //{
+        //  return $"DateTime({time.Ticks}, DateTimeKind.Utc)";
+        //}
+
+
         static void Main(string[] args)
         {
             var context = new RhythmsGonnaGetYouContext();
+
+            // var host = .Build();
+            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             var keepGoing = true;
             while (keepGoing)
@@ -107,6 +116,26 @@ namespace RhythmsGonnaGetYou
                         }
                         else if (modification == "b")
                         {
+                            var nameToUse = PromptForString("For which band would you like to add an album?");
+                            var band = context.Bands.FirstOrDefault(band => band.Name == nameToUse);
+                            var albumNameToAdd = PromptForString("Please enter the name of the album you'd like to add: ");
+                            var isExplicit = PromptForBool("Is the album explicit?");
+                            Console.WriteLine("When was the album released? (YYYY-MM-DD) ");
+                            var inputValue = DateTime.Parse(Console.ReadLine());
+                            //var whenRel = ToStringUtc(inputValue);
+
+
+                            var newAlbum = new Album
+                            {
+                                Title = albumNameToAdd,
+                                IsExplicit = isExplicit,
+                                ReleaseDate = inputValue,
+                                BandId = band.Id
+                            };
+
+                            context.Albums.Add(newAlbum);
+                            context.SaveChanges();
+                            Console.WriteLine($"{newAlbum} was added to {band}!");
 
                         }
 
