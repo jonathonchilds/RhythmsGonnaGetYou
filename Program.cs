@@ -8,11 +8,18 @@ namespace RhythmsGonnaGetYou
     {
         static string PromptForString(string prompt)
         {
+            Console.WriteLine(prompt);
+            return Console.ReadLine();
+        }
+
+        static string PromptForMenuString(string prompt)
+        {
             Console.Write(prompt);
             return Console.ReadLine().ToUpper();
         }
 
         static int PromptForInteger(string prompt)
+
         {
             Console.Write(prompt);
             int userInput;
@@ -25,6 +32,18 @@ namespace RhythmsGonnaGetYou
                 Console.WriteLine("Sorry, that isn't a valid input. I'm using 0 as your answer. ");
                 return 0;
             }
+
+        }
+
+        static bool PromptForBool(string prompt)
+        {
+            Console.Write(prompt);
+            var answer = Console.ReadLine().ToUpper();
+            if (answer[0] == 'Y')
+            {
+                return true;
+            }
+            return false;
 
         }
 
@@ -58,9 +77,32 @@ namespace RhythmsGonnaGetYou
                         var modification = Console.ReadLine().ToLower();
                         if (modification == "a")
                         {
-                            var newBand = new Band();
-                            Console.WriteLine($"What is the name of the band you're adding?");
+
+                            var newName = PromptForString($"What is the name of the band you're adding? ");
+                            var newCountryOfOrigin = PromptForString($"What country is the band from? ");
+                            var newNumberOfMembers = PromptForInteger($"How many members are in this band? ");
+                            var newWebsite = PromptForString("Enter the web address for this band: ");
+                            var newStyle = PromptForString("What style/genre of music does this band play? ");
+                            var newIsSigned = PromptForBool("Is this band signed? (Y/N) ");
+                            var newContactName = PromptForString("Who is the contact point (agent) for this band? ");
+                            var newContactNumber = PromptForString("Enter the phone number for the agent: ((555) 555-5555) ");
+
+                            var newBand = new Band
+                            {
+                                Name = newName,
+                                CountryOfOrigin = newCountryOfOrigin,
+                                NumberOfMembers = newNumberOfMembers,
+                                Website = newWebsite,
+                                Style = newStyle,
+                                IsSigned = newIsSigned,
+                                ContactName = newContactName,
+                                ContactPhoneNumber = newContactNumber
+                            };
+
                             context.Bands.Add(newBand);
+                            context.SaveChanges();
+                            Console.WriteLine($"{newName} was added!");
+
 
                         }
                         else if (modification == "b")
