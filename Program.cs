@@ -37,7 +37,7 @@ namespace RhythmsGonnaGetYou
 
         static bool PromptForBool(string prompt)
         {
-            Console.Write(prompt);
+            Console.WriteLine(prompt);
             var answer = Console.ReadLine().ToUpper();
             if (answer[0] == 'Y')
             {
@@ -119,25 +119,48 @@ namespace RhythmsGonnaGetYou
                             var nameToUse = PromptForString("For which band would you like to add an album?");
                             var band = context.Bands.FirstOrDefault(band => band.Name == nameToUse);
                             var albumNameToAdd = PromptForString("Please enter the name of the album you'd like to add: ");
-                            var isExplicit = PromptForBool("Is the album explicit?");
+                            var isExplicit = PromptForBool("Is the album explicit? ");
                             Console.WriteLine("When was the album released? (YYYY-MM-DD) ");
                             var inputValue = DateTime.Parse(Console.ReadLine());
-                            //var whenRel = ToStringUtc(inputValue);
+                            var inputValueInUTC = inputValue.ToUniversalTime();
 
 
                             var newAlbum = new Album
                             {
                                 Title = albumNameToAdd,
                                 IsExplicit = isExplicit,
-                                ReleaseDate = inputValue,
+                                ReleaseDate = inputValueInUTC,
                                 BandId = band.Id
                             };
 
                             context.Albums.Add(newAlbum);
                             context.SaveChanges();
-                            Console.WriteLine($"{newAlbum} was added to {band}!");
+                            Console.WriteLine($"{albumNameToAdd} was added to {band}!");
 
                         }
+
+                        else if (modification == "s")
+
+                        {
+                            var albumToUpdate = PromptForString("For which album would you like to add a song? ");
+                            var album = context.Albums.FirstOrDefault(album => album.Title == albumToUpdate);
+                            var songTitle = PromptForString("Enter the name of the song you'd like to add: ");
+                            var trackNumber = PromptForInteger("Enter the track number: ");
+                            var duration = PromptForString("Enter the track's duration: ");
+
+                            var newSong = new Song
+                            {
+                                Title = songTitle,
+                                TrackNumber = trackNumber,
+                                Duration = duration,
+                                AlbumId = album.Id
+                            };
+
+                            context.Songs.Add(newSong);
+                            context.SaveChanges();
+                            Console.WriteLine($"{songTitle} was added to {albumToUpdate}!");
+                        }
+
 
                         else
                         {
